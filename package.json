@@ -5,11 +5,13 @@
   "main": "index.js",
   "dependencies": {
     "leaflet": "^1.2.0",
-    "leaflet-easybutton": "^2.2.4"
+    "leaflet-easybutton": "^2.2.4",
+    "express": "^4.15.2"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "setup": "npm install",
+    "start": "node index.js"
   },
   "author": "joaosr",
   "license": "ISC"
