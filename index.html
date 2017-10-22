@@ -1,8 +1,79 @@
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>ttberlin</title>
+  <link rel="stylesheet" href="node_modules/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="node_modules/leaflet-easybutton/src/easy-button.css">
 </head>
+<style>
+body {
+    padding: 0;
+    margin: 0;
+}
+
+html, body, #map {
+    height: 100%;
+    width: 100vw;
+}
+</style>
+
 <body>
-  Hallo Bianca, willst Du Tischtennis spielen?
+  <div id="map" style="width: 100%; height:100%;"></div>
+
+  <script src="node_modules/leaflet/dist/leaflet.js"></script>
+  <script src="node_modules/leaflet-easybutton/src/easy-button.js"></script>
+
+  <script>
+    var map = L.map('map').setView([52.529, 13.341], 14);
+    var tischtennisPoints = L.layerGroup();
+    map.addLayer(tischtennisPoints);
+
+    function TTPoint(_map) {
+      var vm = this;
+      vm.map = _map;
+      vm.marker;
+      vm.clicked=false;
+
+      function init() {
+        vm.marker = L.marker([50.5, 30.5]).addTo(vm.map);
+
+        vm.map.on('mousemove', function(e) {
+          if(!vm.clicked){
+              vm.marker.setLatLng(e.latlng);
+          }
+        });
+
+        vm.map.on('click', function(e) {
+
+          if(!vm.clicked){
+              vm.marker.setLatLng(e.latlng);
+              vm.clicked=true;
+              var r = confirm("Save Tischtennis!");
+              if (r == false) {
+                  vm.clicked=false;
+                  vm.map.removeLayer(vm.marker);
+              } else {
+                  vm.clicked=true;
+                  vm.map.removeLayer(vm.marker);
+                  tischtennisPoints.addLayer(vm.marker);
+                  console.log(tischtennisPoints.toGeoJSON());
+              }
+          }
+
+        });
+      }
+
+      init();
+    }
+
+    L.easyButton('fa-map-marker', function(btn, map){
+        new TTPoint(map);
+    }).addTo(map);
+
+    L.tileLayer('https://api.mapbox.com/styles/v1/joaosr/cj92tr4lc42p52spv77xobif7/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoiam9hb3NyIiwiYSI6ImNqOHZuMmg1ejEzbTAyd3JwdmJmNHFhdXEifQ.ZPTO-d3wGLEqu3VfOSzE6Q', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      maxZoom: 18
+    }).addTo(map);
+  </script>
 </body>
 </html>

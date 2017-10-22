@@ -1,0 +1,16 @@
+{
+  "name": "ttberlin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "leaflet": "^1.2.0",
+    "leaflet-easybutton": "^2.2.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "joaosr",
+  "license": "ISC"
+}
