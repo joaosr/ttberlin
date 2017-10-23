@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.15.2",
     "leaflet": "^1.2.0",
-    "leaflet-easybutton": "^2.2.4",
-    "express": "^4.15.2"
+    "leaflet-easybutton": "^2.2.4"
   },
   "devDependencies": {},
   "scripts": {

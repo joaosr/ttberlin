@@ -20,13 +20,48 @@ html, body, #map {
 <body>
   <div id="map" style="width: 100%; height:100%;"></div>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="static/js/leaflet.js"></script>
   <script src="static/js/easy-button.js"></script>
 
   <script>
     var map = L.map('map').setView([52.529, 13.341], 14);
     var tischtennisPoints = L.layerGroup();
+
     map.addLayer(tischtennisPoints);
+    $.get("/points/list", function(data, status){
+        var n = L.geoJSON(JSON.parse(data));
+        n.eachLayer(function(layer){
+          tischtennisPoints.addLayer(layer);
+        });
+        addClickEvent();
+    });
+
+    function addClickEvent(){
+      tischtennisPoints.eachLayer(function(layer){
+        layer.on('click', function(e){
+            var r = confirm("Delete Tischtennis!");
+            if (r == true) {
+                update(e.target, false);
+            }
+        });
+      });
+    }
+
+    function update(layer, add=true){
+      if(add){
+          tischtennisPoints.addLayer(layer);
+      }else{
+          tischtennisPoints.removeLayer(layer);
+      }
+
+      var dataPOST = {geojson: JSON.stringify(tischtennisPoints.toGeoJSON())};
+      $.post("/points/update", dataPOST,function(data, status){
+          console.log(status);
+          addClickEvent();
+      });
+
+    }
 
     function TTPoint(_map) {
       var vm = this;
@@ -44,7 +79,6 @@ html, body, #map {
         });
 
         vm.map.on('click', function(e) {
-
           if(!vm.clicked){
               vm.marker.setLatLng(e.latlng);
               vm.clicked=true;
@@ -55,8 +89,7 @@ html, body, #map {
               } else {
                   vm.clicked=true;
                   vm.map.removeLayer(vm.marker);
-                  tischtennisPoints.addLayer(vm.marker);
-                  console.log(tischtennisPoints.toGeoJSON());
+                  update(vm.marker);
               }
           }
 
