@@ -9,12 +9,12 @@ $.get("/points/list", function(data, status){
     n.eachLayer(function(layer){
       tischtennisPoints.addLayer(layer);
     });
-    tischtennisPoints.on('layeradd', function(layer){
-      update();
+    tischtennisPoints.on('layeradd', function(e){
+      add(e.layer);
     });
 
-    tischtennisPoints.on('layerremove', function(layer){
-      update();
+    tischtennisPoints.on('layerremove', function(e){
+      remove(e.layer);
     });
     addClickEventToPoint();
 });
@@ -70,10 +70,16 @@ function addEventsToMap(){
   });
 }
 
-function update(){
-  var dataPOST = {geojson: JSON.stringify(tischtennisPoints.toGeoJSON())};
-  $.post("/points/update", dataPOST,function(data, status){
-      console.log(status);
+function add(layer){
+  var dataPOST = {point: JSON.stringify(layer.toGeoJSON())};
+  $.post("/points/add", dataPOST,function(data, status){
+      addClickEventToPoint();
+  });
+}
+
+function remove(layer){
+  var dataPOST = {id: layer.toGeoJSON()['properties']['id']};
+  $.post("/points/remove", dataPOST,function(data, status){
       addClickEventToPoint();
   });
 }
