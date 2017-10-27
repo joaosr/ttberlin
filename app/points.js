@@ -42,8 +42,25 @@ var removePoint = function(id){
 
 
 router.get('/list', function(req, res) {
-  var text = fs.readFileSync (__dirname+"/points.geojson" ,  'utf8' );
-  res.send(text);
+  try {
+      var text = fs.readFileSync (__dirname+"/points.geojson" ,  'utf8' );
+      res.send(text);
+  } catch (err) {
+    var text = '{"type": "FeatureCollection","features": []}';
+    fs.writeFile(__dirname+"/points.geojson", text, function(err) {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log("file has been saved successfully");
+        }
+    });
+
+    res.send(text);
+    // If the type is not what you want, then just throw the error again.
+    //if (err.code !== 'ENOENT') throw err;
+
+    // Handle a file-not-found error
+  }
 });
 
 router.post('/add', function(req, res) {

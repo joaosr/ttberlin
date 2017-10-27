@@ -7,6 +7,7 @@ map.addLayer(tischtennisPoints);
 $.get("/points/list", function(data, status){
     var n = L.geoJSON(JSON.parse(data));
     n.eachLayer(function(layer){
+      addClickEventToPoint(layer);
       tischtennisPoints.addLayer(layer);
     });
     tischtennisPoints.on('layeradd', function(e){
@@ -16,20 +17,17 @@ $.get("/points/list", function(data, status){
     tischtennisPoints.on('layerremove', function(e){
       remove(e.layer);
     });
-    addClickEventToPoint();
 });
 
-function addClickEventToPoint(){
-  tischtennisPoints.eachLayer(function(layer){
+function addClickEventToPoint(layer){
     layer.on('click', function(e){
         L.DomEvent.preventDefault(e);
         L.DomEvent.stopPropagation(e);
-        var r = confirm("Delete Tischtennis!");
-        if (r == true) {
-            tischtennisPoints.removeLayer(layer);
+        console.log('delete', e);
+        if (confirm("Delete Tischtennis!") == true) {
+            tischtennisPoints.removeLayer(e.target);
         }
     });
-  });
 }
 
 function addEventsToMap(){
@@ -43,8 +41,7 @@ function addEventsToMap(){
     if(!currentTTPoint.clicked){
         currentTTPoint.marker.setLatLng(e.latlng);
         currentTTPoint.clicked=true;
-        var r = confirm("Save Tischtennis!");
-        if (r == false) {
+        if (confirm("Save Tischtennis!") == false) {
             currentTTPoint.clicked=false;
             currentTTPoint.remove();
             currentTTPoint = null;
@@ -73,14 +70,14 @@ function addEventsToMap(){
 function add(layer){
   var dataPOST = {point: JSON.stringify(layer.toGeoJSON())};
   $.post("/points/add", dataPOST,function(data, status){
-      addClickEventToPoint();
+
   });
 }
 
 function remove(layer){
   var dataPOST = {id: layer.toGeoJSON()['properties']['id']};
   $.post("/points/remove", dataPOST,function(data, status){
-      addClickEventToPoint();
+
   });
 }
 
@@ -93,6 +90,7 @@ function TTPoint(_map) {
 
   function init() {
     vm.marker = L.marker([50.5, 30.5]).addTo(vm.map);
+    addClickEventToPoint(vm.marker);
   }
 
   function remove(){
