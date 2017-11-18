@@ -17,6 +17,6 @@ app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
 
-var pointsRouter = require('./app/points');
+// var pointsRouter = require('./app/points');
 
-app.use('/points', pointsRouter);
+// app.use('/points', pointsRouter);
