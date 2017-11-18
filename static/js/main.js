@@ -6,6 +6,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/joaosr/cj92tr4lc42p52spv77xobif7/t
 }).addTo(map);
 
 
-$.get("https://gist.githubusercontent.com/joaosr/131e89d8839275548b91e14cace70015/raw/8af2de6eb98e5e247855c835995e358c1232c7ee/berlin_tischtennis.geojson", function(data, status){
+$.get("https://gist.githubusercontent.com/joaosr/131e89d8839275548b91e14cace70015/raw/ddf12cfc342728e7b9eb62b9d76ed81f21ef9a9b/berlin_tischtennis.geojson", function(data, status){
     L.geoJSON(JSON.parse(data)).addTo(map);
 });
